@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const OrderStatusEnum = require("../common/enums/order-status.enum");
 
 const OrderSchema = new mongoose.Schema(
     {
@@ -15,8 +16,8 @@ const OrderSchema = new mongoose.Schema(
         shippingAddress: { type: mongoose.Schema.Types.ObjectId, ref: "Address", required: true },
         status: {
             type: String,
-            enum: ["Pending", "Confirmed", "Shipped", "Delivered", "Cancelled"],
-            default: "Pending",
+            enum: Object.values(OrderStatusEnum),
+            default: OrderStatusEnum.PENDING,
         },
         paymentMethod: { type: String, required: true },
     },

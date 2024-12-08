@@ -1,11 +1,12 @@
 const mongoose = require("mongoose");
+const RoleEnum = require("../common/enums/role.enum");
 
 const UserSchema = new mongoose.Schema(
     {
         name: { type: String, required: true },
         email: { type: String, required: true, unique: true },
         password: { type: String, required: true },
-        role: { type: String, enum: ["customer", "admin"], default: "customer" },
+        role: { type: String, enum: Object.values(RoleEnum), default: RoleEnum.CUSTOMER },
         phone: { type: String },
         addresses: [{ type: mongoose.Schema.Types.ObjectId, ref: "Address" }],
     },
