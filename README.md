@@ -91,7 +91,7 @@ flowchart LR
 
 U[User] -- Request --> S[Server] --> R[Router] -- / --> Shop[ShopController]
 R -- /admin --> Admin[AdminController]
-R -- /api --> API[ApiController]=
+R -- /api --> API[ApiController]
 ```
 
 ### Workflow of a Request
