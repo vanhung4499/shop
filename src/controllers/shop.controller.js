@@ -1,4 +1,4 @@
-const catchAsync = require("../utils/catch-async");
+const catchAsync = require('../utils/catch-async');
 
 const getLoginPage = catchAsync(async (req, res) => {
   res.render('shop/auth/login');
@@ -26,5 +26,6 @@ module.exports = {
   getLoginPage,
   getRegisterPage,
   getHomePage,
-  getLogout
-}
+  getLogout,
+  getProductsPage,
+};

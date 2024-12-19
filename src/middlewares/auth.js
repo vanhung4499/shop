@@ -1,6 +1,6 @@
 const passport = require('passport');
 const httpStatus = require('http-status');
-const AppError = require('../utils/app-error');
+const AppError = require('../common/errors/app-error');
 
 const auth = (requiredRole) => (req, res, next) => {
   passport.authenticate('jwt', { session: false }, (err, user, info) => {

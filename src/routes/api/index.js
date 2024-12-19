@@ -1,7 +1,11 @@
-const express = require("express");
-const authRoute = require("./auth.route");
-const categoryRoute = require("./category.route");
-const userRoute = require("./user.route");
+const express = require('express');
+const authRoute = require('./auth.route');
+const categoryRoute = require('./category.route');
+const userRoute = require('./user.route');
+const productRoute = require('./product.route');
+const bannerRoute = require('./banner.route');
+const addressRoute = require('./address.route');
+const reviewRoute = require('./review.route');
 
 const router = express.Router();
 
@@ -12,7 +16,7 @@ router.use('/auth', authRoute);
 router.use('/users', userRoute);
 
 // Products
-// router.route('/products', productRoute)
+router.use('/products', productRoute);
 
 // Categories
 router.use('/categories', categoryRoute);
@@ -21,8 +25,15 @@ router.use('/categories', categoryRoute);
 
 // Coupons
 
+// Payments
 
+// Banner
+router.use('/banners', bannerRoute);
 
+// Address
+router.use('/addresses', addressRoute);
 
+// Reviews
+router.use('/reviews', reviewRoute);
 
 module.exports = router;

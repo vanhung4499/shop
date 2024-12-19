@@ -9,9 +9,10 @@ This is a simple ecommerce project. Built for educational purposes with Node.js,
 We are using the following technologies:
 
 - Node.js
-- Express.js 
+- Express.js
 - MongoDB for database
 - mongoose for ODM with MongoDB
+- Passport + JWT for authentication/authorization
 - EJS for template engine
 - Bootstrap for styling
 - Docker and Docker Compose for containerization

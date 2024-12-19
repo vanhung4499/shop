@@ -1,5 +1,4 @@
 const dotenv = require('dotenv');
-const path = require('path');
 const Joi = require('joi');
 
 dotenv.config();
@@ -18,7 +17,9 @@ const envSchema = Joi.object()
   })
   .unknown();
 
-const {value: env, error} = envSchema.prefs({errors: {label: 'key'}}).validate(process.env);
+const { value: env, error } = envSchema
+  .prefs({ errors: { label: 'key' } })
+  .validate(process.env);
 
 if (error) {
   throw new Error(`Config validation error: ${error.message}`);

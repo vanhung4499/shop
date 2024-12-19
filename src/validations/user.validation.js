@@ -1,43 +1,54 @@
 const Joi = require('joi');
 const { password, objectId } = require('./custom.validation');
-const RoleEnum = require("../common/enums/role.enum");
+const RoleEnum = require('../common/enums/role.enum');
+
+const userQuery = Joi.object().keys({
+  role: Joi.string()
+    .valid(...Object.values(RoleEnum))
+    .optional(),
+  sortBy: Joi.string().optional(),
+  limit: Joi.number().integer().optional(),
+  page: Joi.number().integer().optional(),
+});
+
+const userParam = Joi.object().keys({
+  userId: Joi.string().custom(objectId),
+});
+
+const userForm = Joi.object().keys({
+  email: Joi.string().email(),
+  password: Joi.string().custom(password),
+  username: Joi.string(),
+  role: Joi.string()
+    .valid(...Object.values(RoleEnum))
+    .default(RoleEnum.CUSTOMER),
+});
+
+const getUsers = {
+  query: userQuery,
+};
 
 const createUser = {
-    body: Joi.object().keys({
-        email: Joi.string().required().email(),
-        password: Joi.string().required().custom(password),
-        username: Joi.string().required(),
-        role: Joi.string().required().valid(...Object.values(RoleEnum)),
-    }),
-}
+  body: userForm,
+};
 
 const getUser = {
-    params: Joi.object().keys({
-        userId: Joi.string().custom(objectId),
-    }),
-}
+  params: userParam,
+};
 
 const updateUser = {
-    params: Joi.object().keys({
-        userId: Joi.required().custom(objectId),
-    }),
-    body: Joi.object().keys({
-        email: Joi.string().email(),
-        password: Joi.string().custom(password),
-        username: Joi.string(),
-        role: Joi.string().valid(...Object.values(RoleEnum)),
-    }),
-}
+  params: userParam,
+  body: userForm,
+};
 
 const deleteUser = {
-    params: Joi.object().keys({
-        userId: Joi.string().custom(objectId),
-    }),
-}
+  params: userParam,
+};
 
 module.exports = {
-    createUser,
-    getUser,
-    updateUser,
-    deleteUser,
-}
+  getUsers,
+  createUser,
+  getUser,
+  updateUser,
+  deleteUser,
+};

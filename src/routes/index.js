@@ -5,8 +5,8 @@ const apiRoute = require('./api');
 
 const router = express.Router();
 
-router.use('/api', apiRoute)
-router.use('', shopRoute)
-router.use('/admin', adminRoute)
+router.use('/api', apiRoute);
+router.use('', shopRoute);
+router.use('/admin', adminRoute);
 
 module.exports = router;

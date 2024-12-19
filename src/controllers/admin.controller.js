@@ -1,35 +1,35 @@
-const catchAsync = require("../utils/catch-async");
+const catchAsync = require('../utils/catch-async');
 
 const getAdminLoginPage = catchAsync(async (req, res) => {
-  res.render("admin/login");
+  res.render('admin/login');
 });
 
 const getAdminDashboardPage = catchAsync(async (req, res) => {
-  res.render("admin/dashboard");
+  res.render('admin/dashboard');
 });
 
 const getProductListPage = catchAsync(async (req, res) => {
-  res.render("admin/product-list");
+  res.render('admin/product-list');
 });
 
 const getProductAddPage = catchAsync(async (req, res) => {
-  res.render("admin/product-add");
+  res.render('admin/product-add');
 });
 
 const getProductEditPage = catchAsync(async (req, res) => {
-  res.render("admin/product-edit");
+  res.render('admin/product-edit');
 });
 
 const getCategoryListPage = catchAsync(async (req, res) => {
-  res.render("admin/category-list");
+  res.render('admin/category-list');
 });
 
 const getCategoryAddPage = catchAsync(async (req, res) => {
-  res.render("admin/category-add");
+  res.render('admin/category-add');
 });
 
 const getCategoryEditPage = catchAsync(async (req, res) => {
-  res.render("admin/category-edit");
+  res.render('admin/category-edit');
 });
 
 module.exports = {

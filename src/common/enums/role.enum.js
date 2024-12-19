@@ -1,6 +1,6 @@
 const RoleEnum = Object.freeze({
-    ADMIN: "admin",
-    CUSTOMER: "customer",
+  ADMIN: 'admin',
+  CUSTOMER: 'customer',
 });
 
 module.exports = RoleEnum;

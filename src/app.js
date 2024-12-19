@@ -1,21 +1,17 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-const morgan = require('morgan');
 const path = require('path');
 const cors = require('cors');
-const cookieParser = require('cookie-parser');
-const logger = require('morgan');
 const helmet = require('helmet');
 const xss = require('xss-clean');
 const mongoSanitize = require('express-mongo-sanitize');
 const compression = require('compression');
 const passport = require('passport');
 const httpStatus = require('http-status');
-const {jwtStrategy} = require("./config/passport");
+const { jwtStrategy } = require('./config/passport');
 
 const routes = require('./routes');
-const {errorConverter, errorHandler} = require("./middlewares/error");
-const AppError = require("./utils/app-error");
+const { errorConverter, errorHandler } = require('./middlewares/error');
+const AppError = require('./common/errors/app-error');
 
 const app = express();
 
@@ -54,7 +50,7 @@ passport.use('jwt', jwtStrategy);
 app.use('/', routes);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(new AppError(httpStatus.NOT_FOUND, 'Not found'));
 });
 

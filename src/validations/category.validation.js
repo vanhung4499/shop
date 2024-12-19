@@ -1,37 +1,40 @@
 const Joi = require('joi');
+const { objectId } = require('./custom.validation');
+
+const categoryParam = Joi.object().keys({
+  categoryId: Joi.string().custom(objectId),
+});
+
+const categoryForm = Joi.object().keys({
+  name: Joi.string().required(),
+  description: Joi.string().required(),
+});
 
 const createCategory = {
-  body: Joi.object().keys({
-    name: Joi.string().required(),
-    description: Joi.string().required(),
-  }),
-}
+  body: categoryForm,
+};
 
 const getCategory = {
-  params: Joi.object().keys({
-    categoryId: Joi.string().required(),
-  }),
-}
+  params: categoryParam,
+};
 
 const updateCategory = {
-  params: Joi.object().keys({
-    categoryId: Joi.string
-  }),
-  body: Joi.object().keys({
-    name: Joi.string(),
-    description: Joi.string(),
-  }),
-}
+  params: categoryParam,
+  body: categoryForm,
+};
 
 const deleteCategory = {
-  params: Joi.object().keys({
-    categoryId: Joi.string
-  }),
-}
+  params: categoryParam,
+};
+
+const getCategories = {
+  query: categoryParam,
+};
 
 module.exports = {
   createCategory,
   getCategory,
   updateCategory,
   deleteCategory,
-}
+  getCategories,
+};

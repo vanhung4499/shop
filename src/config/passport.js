@@ -1,12 +1,11 @@
-const {Strategy: JwtStrategy, ExtractJwt} = require('passport-jwt');
+const { Strategy: JwtStrategy, ExtractJwt } = require('passport-jwt');
 const config = require('./config');
-const TokenTypeEnum = require("../common/enums/token-type.enum");
-const {User} = require("../models");
+const { User } = require('../models');
 
 const jwtOptions = {
   secretOrKey: config.jwt.secret,
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-}
+};
 
 const jwtVerify = async (payload, done) => {
   try {
@@ -18,10 +17,10 @@ const jwtVerify = async (payload, done) => {
   } catch (error) {
     done(error, false);
   }
-}
+};
 
 const jwtStrategy = new JwtStrategy(jwtOptions, jwtVerify);
 
 module.exports = {
-  jwtStrategy
-}
+  jwtStrategy,
+};

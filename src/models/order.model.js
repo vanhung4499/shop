@@ -1,27 +1,46 @@
 const mongoose = require('mongoose');
-const OrderStatusEnum = require("../common/enums/order-status.enum");
+const OrderStatusEnum = require('../common/enums/order-status.enum');
+const { toJSON, paginate } = require('./plugins');
 
-const OrderSchema = new mongoose.Schema(
-    {
-        userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-        items: [
-            {
-                productId: { type: mongoose.Schema.Types.ObjectId, ref: "Product", required: true },
-                name: { type: String, required: true },
-                price: { type: Number, required: true },
-                quantity: { type: Number, required: true },
-            },
-        ],
-        totalPrice: { type: Number, required: true },
-        shippingAddress: { type: mongoose.Schema.Types.ObjectId, ref: "Address", required: true },
-        status: {
-            type: String,
-            enum: Object.values(OrderStatusEnum),
-            default: OrderStatusEnum.PENDING,
-        },
-        paymentMethod: { type: String, required: true },
+const OrderSchema = mongoose.Schema(
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
     },
-    { timestamps: true }
+    items: [
+      {
+        productId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Product',
+          required: true,
+        },
+        name: { type: String, required: true },
+        price: { type: Number, required: true },
+        quantity: { type: Number, required: true },
+      },
+    ],
+    total: { type: Number, required: true },
+    shippingAddress: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Address',
+      required: true,
+    },
+    status: {
+      type: String,
+      enum: Object.values(OrderStatusEnum),
+      default: OrderStatusEnum.PENDING,
+    },
+    paymentMethod: { type: String, required: true },
+  },
+  { timestamps: true },
 );
 
-module.exports = mongoose.model("Order", OrderSchema);
+// add plugin that converts mongoose to json
+OrderSchema.plugin(toJSON);
+OrderSchema.plugin(paginate);
+
+const Order = mongoose.model('Order', OrderSchema);
+
+module.exports = Order;

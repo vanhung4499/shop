@@ -1,6 +1,7 @@
-const {Category} = require("../models");
-const AppError = require("../utils/app-error");
-const httpStatus = require("http-status");
+const { Category } = require('../models');
+const AppError = require('../common/errors/app-error');
+const { BizError } = require('../common/errors');
+const ResultCode = require('../common/enums/result-code');
 
 /**
  * Get all categories
@@ -8,7 +9,7 @@ const httpStatus = require("http-status");
  */
 const getCategories = async () => {
   return Category.find();
-}
+};
 
 /**
  * Get category by id
@@ -18,10 +19,10 @@ const getCategories = async () => {
 const getCategoryById = async (categoryId) => {
   const category = await Category.findById(categoryId);
   if (!category) {
-    throw new AppError(httpStatus.NOT_FOUND, 'Category not found');
+    throw new BizError(ResultCode.CATEGORY_NOT_FOUND);
   }
   return category;
-}
+};
 
 /**
  * Create a new category
@@ -32,11 +33,11 @@ const createCategory = async (categoryForm) => {
   // Check if category already exists
   const existCategory = await Category.findOne({ name: categoryForm.name });
   if (existCategory) {
-    throw new AppError(httpStatus.BAD_REQUEST, 'Category already exists');
+    throw new BizError(ResultCode.CATEGORY_EXISTS);
   }
   // Create a new category
   return Category.create(categoryForm);
-}
+};
 
 /**
  * Update a category
@@ -46,14 +47,11 @@ const createCategory = async (categoryForm) => {
  */
 const updateCategoryById = async (categoryId, categoryForm) => {
   const category = await getCategoryById(categoryId);
-  if (!category) {
-    throw new AppError(httpStatus.NOT_FOUND, 'Category not found');
-  }
 
   Object.assign(category, categoryForm);
   await category.save();
   return category;
-}
+};
 
 /**
  * Delete a category
@@ -62,12 +60,10 @@ const updateCategoryById = async (categoryId, categoryForm) => {
  */
 const deleteCategoryById = async (categoryId) => {
   const category = await getCategoryById(categoryId);
-  if (!category) {
-    throw new AppError(httpStatus.NOT_FOUND, 'Category not found');
-  }
-  await category.remove();
+
+  await category.deleteOne();
   return category;
-}
+};
 
 module.exports = {
   getCategories,
@@ -75,4 +71,4 @@ module.exports = {
   createCategory,
   updateCategoryById,
   deleteCategoryById,
-}
+};

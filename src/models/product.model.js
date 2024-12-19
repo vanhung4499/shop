@@ -1,26 +1,31 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
+const { toJSON, paginate } = require('./plugins');
 
-const ProductSchema = new mongoose.Schema(
-    {
-        name: { type: String, required: true },
-        description: { type: String },
-        price: { type: Number, required: true },
-        discount: { type: Number, default: 0 }, // percentage
-        stock: { type: Number, required: true },
-        category: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
-        brand: { type: String },
-        images: [String],
-        tags: [String],
-        ratings: [
-            {
-                userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-                rating: { type: Number, required: true },
-                comment: String,
-                createdAt: { type: Date, default: Date.now },
-            },
-        ],
-    },
-    { timestamps: true }
+const ProductSchema = mongoose.Schema(
+  {
+    name: { type: String, required: true },
+    slug: { type: String, required: true, unique: true },
+    description: { type: String },
+    price: { type: Number, required: true },
+    originalPrice: { type: Number },
+    stock: { type: Number, required: true },
+    category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' },
+    brand: { type: String },
+    images: { type: [String] },
+    reviews: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Review',
+      },
+    ],
+  },
+  { timestamps: true },
 );
 
-module.exports = mongoose.model("Product", ProductSchema);
+// add plugin that converts mongoose to json
+ProductSchema.plugin(toJSON);
+ProductSchema.plugin(paginate);
+
+const Product = mongoose.model('Product', ProductSchema);
+
+module.exports = Product;

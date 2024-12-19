@@ -2,9 +2,10 @@ const jwt = require('jsonwebtoken');
 const moment = require('moment');
 const httpStatus = require('http-status');
 const config = require('../config/config');
-const userService = require('./user.service');
-const AppError = require("../utils/app-error");
-const {User} = require("../models");
+const AppError = require('../common/errors/app-error');
+const { User } = require('../models');
+const { loggers } = require('winston');
+const logger = require('../config/logger');
 
 /**
  * Generate token
@@ -34,14 +35,15 @@ const verifyToken = async (token) => {
 
     const user = User.findById(payload.sub);
     if (!user) {
-      throw new AppError(httpStatus.UNAUTHORIZED, "User not found");
+      throw new AppError(httpStatus.UNAUTHORIZED, 'User not found');
     }
 
     return payload;
   } catch (error) {
-    throw new AppError(httpStatus.UNAUTHORIZED, "Invalid token");
+    logger.error(error);
+    throw new AppError(httpStatus.UNAUTHORIZED, 'Invalid token');
   }
-}
+};
 
 /**
  * Generate auth tokens
@@ -49,10 +51,16 @@ const verifyToken = async (token) => {
  * @returns {Promise<Object>}
  */
 const generateAuthTokens = (user) => {
-  const accessTokenExpiresIn = moment().add(config.jwt.accessTokenExpiresIn, 'seconds');
+  const accessTokenExpiresIn = moment().add(
+    config.jwt.accessTokenExpiresIn,
+    'seconds',
+  );
   const accessToken = generateToken(user.id, accessTokenExpiresIn, user.role);
 
-  const refreshTokenExpiresIn = moment().add(config.jwt.refreshTokenExpiresIn, 'seconds');
+  const refreshTokenExpiresIn = moment().add(
+    config.jwt.refreshTokenExpiresIn,
+    'seconds',
+  );
   const refreshToken = generateToken(user.id, refreshTokenExpiresIn, user.role);
 
   return {
