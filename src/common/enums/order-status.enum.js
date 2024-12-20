@@ -1,9 +1,11 @@
 const OrderStatusEnum = Object.freeze({
   PENDING: 'Pending',
-  CONFIRMED: 'Confirmed',
+  WAITING_PAYMENT: 'Waiting Payment',
+  PAID: 'Paid',
   SHIPPED: 'Shipped',
   DELIVERED: 'Delivered',
   CANCELLED: 'Cancelled',
+  PAYMENT_FAILED: 'Payment Failed',
 });
 
 module.exports = OrderStatusEnum;

@@ -31,6 +31,10 @@ const ResultCode = Object.freeze({
   PRODUCT_NOT_FOUND: { code: 10300, message: 'Product not found' },
   PRODUCT_EXISTS: { code: 10301, message: 'Product already exists' },
   PRODUCT_OUT_OF_STOCK: { code: 10302, message: 'Product out of stock' },
+  PRODUCT_STOCK_INSUFFICIENT: {
+    code: 10303,
+    message: 'Product stock insufficient',
+  },
 
   // Order
   ORDER_NOT_FOUND: { code: 10400, message: 'Order not found' },

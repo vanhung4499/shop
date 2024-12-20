@@ -1,30 +1,30 @@
 const Joi = require('joi');
 const { objectId } = require('./custom.validation');
 
-const addItemToCart = {
-  body: Joi.object().keys({
-    productId: Joi.string().custom(objectId).required(),
-    quantity: Joi.number().min(1).required(),
-  }),
+const itemParam = Joi.object().keys({
+  itemId: Joi.string().custom(objectId).required(),
+});
+
+const cartItemForm = Joi.object().keys({
+  productId: Joi.string().custom(objectId).required(),
+  quantity: Joi.number().required(),
+});
+
+const addCartItem = {
+  body: cartItemForm,
 };
 
 const updateCartItem = {
-  params: Joi.object().keys({
-    itemId: Joi.string().custom(objectId).required(),
-  }),
-  body: Joi.object().keys({
-    quantity: Joi.number().min(1).required(),
-  }),
+  params: itemParam,
+  body: cartItemForm,
 };
 
-const removeItemFromCart = {
-  params: Joi.object().keys({
-    itemId: Joi.string().custom(objectId).required(),
-  }),
+const removeCartItem = {
+  params: itemParam,
 };
 
 module.exports = {
-  addItemToCart,
+  addCartItem,
   updateCartItem,
-  removeItemFromCart,
+  removeCartItem,
 };

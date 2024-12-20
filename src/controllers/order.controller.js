@@ -6,7 +6,7 @@ const { orderService } = require('../services');
 
 const createOrder = catchAsync(async (req, res) => {
   const order = await orderService.createOrder(req.user.id, req.body);
-  res.send(result.success(order));
+  res.send(result.success());
 });
 
 const getOrder = catchAsync(async (req, res) => {

@@ -4,13 +4,13 @@ const result = require('../utils/result');
 
 const getCart = catchAsync(async (req, res) => {
   const userId = req.user.id;
-  const cart = await cartService.getCartByUserId(userId);
+  const cart = await cartService.getCart(userId);
   res.send(result.success(cart));
 });
 
-const addItemToCart = catchAsync(async (req, res) => {
+const addCartItem = catchAsync(async (req, res) => {
   const userId = req.user.id;
-  const cart = await cartService.addItemToCart(userId, req.body);
+  const cart = await cartService.addCartItem(userId, req.body);
   res.send(result.success(cart));
 });
 
@@ -21,10 +21,10 @@ const updateCartItem = catchAsync(async (req, res) => {
   res.send(result.success(cart));
 });
 
-const removeItemFromCart = catchAsync(async (req, res) => {
+const removeCartItem = catchAsync(async (req, res) => {
   const userId = req.user.id;
   const itemId = req.params.itemId;
-  const cart = await cartService.removeItemFromCart(userId, itemId);
+  const cart = await cartService.removeCartItem(userId, itemId);
   res.send(result.success(cart));
 });
 
@@ -36,8 +36,8 @@ const deleteCart = catchAsync(async (req, res) => {
 
 module.exports = {
   getCart,
-  addItemToCart,
+  addCartItem,
   updateCartItem,
-  removeItemFromCart,
+  removeCartItem,
   deleteCart,
 };

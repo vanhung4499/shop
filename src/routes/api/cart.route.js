@@ -12,8 +12,8 @@ router
   .get(auth(RoleEnum.CUSTOMER), cartController.getCart)
   .post(
     auth(RoleEnum.CUSTOMER),
-    validate(cartValidation.addItemToCart),
-    cartController.addItemToCart,
+    validate(cartValidation.addCartItem),
+    cartController.addCartItem,
   )
   .delete(auth(RoleEnum.CUSTOMER), cartController.deleteCart);
 
@@ -26,8 +26,8 @@ router
   )
   .delete(
     auth(RoleEnum.CUSTOMER),
-    validate(cartValidation.removeItemFromCart),
-    cartController.removeItemFromCart,
+    validate(cartValidation.removeCartItem),
+    cartController.removeCartItem,
   );
 
 module.exports = router;

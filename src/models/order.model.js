@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const OrderStatusEnum = require('../common/enums/order-status.enum');
 const { toJSON, paginate } = require('./plugins');
+const PaymentMethodEnum = require('../common/enums/payment-method.enum');
 
 const OrderSchema = mongoose.Schema(
   {
@@ -32,7 +33,11 @@ const OrderSchema = mongoose.Schema(
       enum: Object.values(OrderStatusEnum),
       default: OrderStatusEnum.PENDING,
     },
-    paymentMethod: { type: String, required: true },
+    paymentMethod: {
+      type: String,
+      enum: Object.values(PaymentMethodEnum),
+      required: true,
+    },
   },
   { timestamps: true },
 );

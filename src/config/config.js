@@ -14,6 +14,8 @@ const envSchema = Joi.object()
     CLOUDINARY_CLOUD_NAME: Joi.string().required(),
     CLOUDINARY_API_KEY: Joi.string().required(),
     CLOUDINARY_API_SECRET: Joi.string().required(),
+    RABBITMQ_URL: Joi.string().required(),
+    REDIS_URL: Joi.string().required(),
   })
   .unknown();
 
@@ -41,5 +43,11 @@ module.exports = {
     cloudName: env.CLOUDINARY_CLOUD_NAME,
     apiKey: env.CLOUDINARY_API_KEY,
     apiSecret: env.CLOUDINARY_API_SECRET,
+  },
+  rabbitmq: {
+    url: env.RABBITMQ_URL,
+  },
+  redis: {
+    url: env.REDIS_URL,
   },
 };
