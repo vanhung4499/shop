@@ -11,6 +11,8 @@ We are using the following technologies:
 - Node.js
 - Express.js
 - MongoDB for database
+- Redis for caching
+- RabbitMQ for message queue
 - mongoose for ODM with MongoDB
 - Passport + JWT for authentication/authorization
 - EJS for template engine
@@ -19,11 +21,14 @@ We are using the following technologies:
 
 ## Installation and Running
 
-> We use Docker to create a MongoDB container. If you don't want to use Docker, you can install MongoDB on your machine and change the connection string in the `.env` file.
+> We use Docker to create infrastructure for MongoDB, Redis and RabbitMQ. If you don't want to use Docker, you can
+> install them on your machine.
+> If you don't want to use Docker, you can install MongoDB on your machine and change the connection string in the
+`.env` file.
 
-### Database
+### Infrastructure
 
-Create an mongodb container with Docker Compose:
+Build the infrastructure with Docker Compose:
 
 ```bash
 # Change directory to dev-ops
@@ -33,7 +38,10 @@ cd docs/dev-ops
 docker-compose up -d
 ```
 
-After running the command, you can access the MongoDB at `mongodb://localhost:27017/shop`.
+After running the command, you can access:
+- MongoDB at `mongodb://localhost:27017/shop`.
+- Redis at `redis://localhost:6379`.
+- RabbitMQ at `amqp://localhost:15672`. (username: `admin`, password: `admin`)
 
 ### Run application
 
@@ -70,6 +78,9 @@ src
 ├── common        # Common files like constants, enums, etc.
 ├── config        # Configuration files like database, logger, etc.
 ├── controllers   # Controllers for handling requests
+├── converters    # Converters for converting data between layers
+├── jobs          # Jobs for handling background tasks
+├── listeners     # Listeners for consuming messages from RabbitMQ
 ├── middlewares   # Middlewares like authentication, authorization, etc.
 ├── models        # Mongoose models to interact with MongoDB
 ├── routes        # Routes for the application
@@ -122,7 +133,8 @@ When users access the website, express will render the EJS views in the `views` 
 
 We split the controller to 2 types. Return JSON for API and render EJS views for web pages.
 
-We should limit render the ejs views in the controller. Instead of it, we create more api for the web pages to call by ajax and get the data.
+We should limit render the ejs views in the controller. Instead of it, we create more api for the web pages to call by
+ajax and get the data.
 
 > For now, project are in development. We will update more features in the future.
 
@@ -139,3 +151,6 @@ TODO: Deploy the project to a server, maybe use a cloud provider like Heroku, AW
 - [EJS](https://ejs.co/)
 - [Bootstrap](https://getbootstrap.com/)
 - [Docker](https://www.docker.com/)
+- [Docker Compose](https://docs.docker.com/compose/)
+- [RabbitMQ](https://www.rabbitmq.com/)
+- [Redis](https://redis.io/)

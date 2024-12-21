@@ -7,8 +7,8 @@ const { orderService } = require('../services');
 const createOrder = catchAsync(async (req, res) => {
   // Assign current user id to order
   req.body.userId = req.user.id;
-  const order = await orderService.createOrder(req.body);
-  res.send(result.success());
+  const orderId = await orderService.createOrder(req.body);
+  res.send(result.success(orderId));
 });
 
 const cancelOrder = catchAsync(async (req, res) => {

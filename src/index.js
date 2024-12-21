@@ -5,6 +5,7 @@ const logger = require('./config/logger');
 
 // Import jobs
 const jobs = require('./jobs');
+const consumers = require('./listeners');
 
 async function startServer() {
   // Connect to MongoDB

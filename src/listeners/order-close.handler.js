@@ -11,7 +11,7 @@ const handleOrderClose = async (message) => {
     if (closeResult) {
       logger.info(`Order ${orderId} closed due to payment expired`);
     } else {
-      console.log(`Order ${orderId} is not pending, no need to close`);
+      logger.info(`Order ${orderId} is not pending, no need to close`);
     }
   } catch (error) {
     logger.error(`Error handling order close: ${error}`);

@@ -3,8 +3,11 @@ const { BizError } = require('../common/errors');
 const ResultCode = require('../common/constants/result-code');
 const OrderStatusEnum = require('../common/enums/order-status.enum');
 const { productService } = require('./index');
-const { sendMessage } = require('../config/rabbitmq');
-const { RabbitMQConstants } = require('../common/constants');
+const { sendMessage, sendDelayedMessage } = require('../config/rabbitmq');
+const {
+  RabbitMQConstants,
+  OrderCancelReasonConstants,
+} = require('../common/constants');
 const config = require('../config/config');
 const logger = require('../config/logger');
 
@@ -25,12 +28,11 @@ const createOrder = async (orderForm) => {
     // Save order to database
     const order = await saveOrder(orderForm);
 
-    // Get order timeout from config
-    const timeout = config.business.orderTimeout;
+    return order.id;
   } catch (error) {
     // Rollback transaction if error occurs
     await session.abortTransaction();
-    session.endSession();
+    await session.endSession();
     logger.info('Create order failed: ' + error);
     throw error;
   }
@@ -55,7 +57,11 @@ const saveOrder = async (orderForm) => {
   // Send message to MQ with TTL for handling payment expiration
   const message = JSON.stringify({ orderId: order.id });
   const timeout = config.business.orderTimeout;
-  await sendMessage(RabbitMQConstants.ORDER_CLOSE_QUEUE, message, timeout);
+  await sendDelayedMessage(
+    RabbitMQConstants.ORDER_CLOSE_QUEUE,
+    message,
+    timeout,
+  );
 
   return order;
 };
@@ -127,6 +133,11 @@ const closeOrder = async (orderId) => {
   if (order.status !== OrderStatusEnum.PENDING) {
     return false;
   }
+
+  // Update order status to CANCELLED and set cancel reason
+  order.status = OrderStatusEnum.CANCELLED;
+  order.cancelReason = OrderCancelReasonConstants.PAYMENT_TIMEOUT;
+  await order.save();
 
   // Unlock stock for all products in the order
   await productService.unlockStock(order.items);

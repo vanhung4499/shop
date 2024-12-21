@@ -38,7 +38,7 @@ services:
   # admin/admin
   # rabbitmq-plugins enable rabbitmq_management
   rabbitmq:
-    image: rabbitmq:3.12.9
+    build: ./rabbitmq
     container_name: rabbitmq
     restart: always
     ports:
