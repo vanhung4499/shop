@@ -16,6 +16,7 @@ const envSchema = Joi.object()
     CLOUDINARY_API_SECRET: Joi.string().required(),
     RABBITMQ_URL: Joi.string().required(),
     REDIS_URL: Joi.string().required(),
+    ORDER_TIMEOUT: Joi.number().default(900), // 15 minutes
   })
   .unknown();
 
@@ -49,5 +50,8 @@ module.exports = {
   },
   redis: {
     url: env.REDIS_URL,
+  },
+  business: {
+    orderTimeout: env.ORDER_TIMEOUT,
   },
 };

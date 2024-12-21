@@ -13,6 +13,14 @@ const createAddress = catchAsync(async (req, res) => {
   res.send(result.success(address));
 });
 
+const getAddress = catchAsync(async (req, res) => {
+  // Get current user id from passport
+  const userId = req.user.id;
+  const { addressId } = req.params;
+  const address = await addressService.getAddressById(addressId, userId);
+  res.send(result.success(address));
+});
+
 const getCurrentUserAddresses = catchAsync(async (req, res) => {
   // Get current user id from passport
   const userId = req.user.id;
@@ -23,21 +31,18 @@ const getCurrentUserAddresses = catchAsync(async (req, res) => {
 
 const updateAddress = catchAsync(async (req, res) => {
   // Get current user id from passport
-  const userId = req.user.id;
+  const requesterId = req.user.id;
   const { addressId } = req.params;
-  const address = await addressService.updateAddress(
-    addressId,
-    userId,
-    req.body,
-  );
+  req.body.requesterId = requesterId;
+  const address = await addressService.updateAddress(addressId, req.body);
   res.send(result.success(address));
 });
 
 const deleteAddress = catchAsync(async (req, res) => {
   // Get current user id from passport
-  const userId = req.user.id;
+  const requesterId = req.user.id;
   const { addressId } = req.params;
-  await addressService.deleteAddress(addressId, userId);
+  await addressService.deleteAddress(addressId, requesterId);
   res.send(result.success());
 });
 
@@ -46,4 +51,5 @@ module.exports = {
   getCurrentUserAddresses,
   deleteAddress,
   updateAddress,
+  getAddress,
 };

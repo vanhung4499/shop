@@ -7,6 +7,7 @@ const bannerRoute = require('./banner.route');
 const addressRoute = require('./address.route');
 const reviewRoute = require('./review.route');
 const cartRoute = require('./cart.route');
+const orderRoute = require('./order.route');
 
 const router = express.Router();
 
@@ -26,6 +27,7 @@ router.use('/categories', categoryRoute);
 router.use('/carts', cartRoute);
 
 // Orders
+router.use('/orders', orderRoute);
 
 // Coupons
 

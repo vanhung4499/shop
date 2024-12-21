@@ -38,6 +38,8 @@ const OrderSchema = mongoose.Schema(
       enum: Object.values(PaymentMethodEnum),
       required: true,
     },
+    transactionId: { type: String },
+    cancelReason: { type: String },
   },
   { timestamps: true },
 );

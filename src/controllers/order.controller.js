@@ -5,13 +5,22 @@ const pick = require('../utils/pick');
 const { orderService } = require('../services');
 
 const createOrder = catchAsync(async (req, res) => {
-  const order = await orderService.createOrder(req.user.id, req.body);
+  // Assign current user id to order
+  req.body.userId = req.user.id;
+  const order = await orderService.createOrder(req.body);
+  res.send(result.success());
+});
+
+const cancelOrder = catchAsync(async (req, res) => {
+  req.body.requesterId = req.user.id;
+  await orderService.cancelOrder(req.body);
   res.send(result.success());
 });
 
 const getOrder = catchAsync(async (req, res) => {
   const { orderId } = req.params;
-  const order = await orderService.getOrderById(orderId);
+  const userId = req.user.id;
+  const order = await orderService.getOrderById(orderId, userId);
   res.send(result.success(order));
 });
 
@@ -24,10 +33,17 @@ const getOrders = catchAsync(async (req, res) => {
 
   // If user is customer, get only his orders
   if (currentUser.role === RoleEnum.CUSTOMER) {
-    filter.user = currentUser.id;
+    filter.userId = currentUser.id;
   }
+
   const orders = await orderService.getOrders(filter, options);
   res.send(result.success(orders));
+});
+
+const payOrder = catchAsync(async (req, res) => {
+  const { orderId } = req.body;
+  await orderService.payOrder(orderId);
+  res.send(result.success());
 });
 
 const updateOrder = catchAsync(async (req, res) => {
@@ -48,4 +64,6 @@ module.exports = {
   getOrders,
   updateOrder,
   deleteOrder,
+  payOrder,
+  cancelOrder,
 };

@@ -20,8 +20,8 @@ const ResultCode = Object.freeze({
 
   // User
   USER_NOT_FOUND: { code: 1010, message: 'User not found' },
-  USER_EMAIL_EXISTS: { code: 10100, message: 'Email already exists' },
-  USER_USERNAME_EXISTS: { code: 10102, message: 'Username already exists' },
+  EMAIL_EXISTS: { code: 10100, message: 'Email already exists' },
+  USERNAME_EXISTS: { code: 10102, message: 'Username already exists' },
 
   // Category
   CATEGORY_NOT_FOUND: { code: 10200, message: 'Category not found' },
@@ -38,6 +38,19 @@ const ResultCode = Object.freeze({
 
   // Order
   ORDER_NOT_FOUND: { code: 10400, message: 'Order not found' },
+  ORDER_CANNOT_CANCEL: {
+    code: 10401,
+    message: 'Order cannot be cancelled after shipped',
+  },
+  ORDER_NOT_BELONG_TO_USER: {
+    code: 10402,
+    message: 'Order does not belong to user',
+  },
+  ORDER_PAYMENT_FAILED: { code: 10403, message: 'Order payment failed' },
+  ORDER_CANNOT_PAY: {
+    code: 10404,
+    message: 'Order has been paid or cancelled',
+  },
 
   // Cart
   CART_NOT_FOUND: { code: 10500, message: 'Cart not found' },
@@ -60,6 +73,10 @@ const ResultCode = Object.freeze({
     code: 10801,
     message: 'Address does not belong to user',
   },
+
+  // Auth
+  PASSWORD_NOT_MATCH: { code: 10900, message: 'Password not match' },
+  TOKEN_INVALID: { code: 10901, message: 'Invalid token' },
 
   // --- Infrastructure code ---
   DB_ERROR: { code: 30001, message: 'Database error' },

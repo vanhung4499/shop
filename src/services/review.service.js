@@ -1,6 +1,6 @@
 const { Review } = require('../models');
 const { BizError } = require('../common/errors');
-const ResultCode = require('../common/enums/result-code');
+const ResultCode = require('../common/constants/result-code');
 
 const getReviews = async (filter, options) => {
   return Review.paginate(filter, options);
@@ -20,10 +20,10 @@ const createReview = async (reviewForm) => {
   return Review.create(reviewForm);
 };
 
-const updateReviewById = async (reviewId, userId, reviewForm) => {
+const updateReviewById = async (reviewId, reviewForm) => {
   const review = await getReviewById(reviewId);
 
-  if (review.userId.toString() !== userId) {
+  if (review.userId.toString() !== reviewForm.requesterId) {
     throw new BizError(ResultCode.REVIEW_NOT_BELONG_TO_USER);
   }
 
@@ -32,10 +32,10 @@ const updateReviewById = async (reviewId, userId, reviewForm) => {
   return review;
 };
 
-const deleteReviewById = async (reviewId, userId) => {
+const deleteReviewById = async (reviewId, requesterId) => {
   const review = await getReviewById(reviewId);
 
-  if (review.userId.toString() !== userId) {
+  if (review.userId.toString() !== requesterId) {
     throw new BizError(ResultCode.REVIEW_NOT_BELONG_TO_USER);
   }
 

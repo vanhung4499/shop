@@ -1,4 +1,4 @@
-const ResultCode = require('../common/enums/result-code');
+const ResultCode = require('../common/constants/result-code');
 const result = {
   success(data = null) {
     return {

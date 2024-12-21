@@ -1,6 +1,6 @@
 const { Banner } = require('../models');
 const { BizError } = require('../common/errors');
-const ResultCode = require('../common/enums/result-code');
+const ResultCode = require('../common/constants/result-code');
 
 /**
  * Get banners with pagination

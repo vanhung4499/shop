@@ -14,5 +14,10 @@ router.post(
 );
 router.post('/logout', auth(), authController.logout);
 router.get('/me', auth(), authController.getMe);
+router.post(
+  '/refresh-token',
+  validate(authValidation.refreshAuth),
+  authController.refreshAuth,
+);
 
 module.exports = router;

@@ -22,20 +22,17 @@ const createReview = catchAsync(async (req, res) => {
 });
 
 const updateReview = catchAsync(async (req, res) => {
-  const userId = req.user.id;
+  const requesterId = req.user.id;
   const { reviewId } = req.params;
-  const review = await reviewService.updateReviewById(
-    reviewId,
-    userId,
-    req.body,
-  );
+  req.body.requesterId = requesterId;
+  const review = await reviewService.updateReviewById(reviewId, req.body);
   res.send(result.success(review));
 });
 
 const deleteReview = catchAsync(async (req, res) => {
   const { reviewId } = req.params;
-  const userId = req.user.id;
-  await reviewService.deleteReviewById(reviewId, userId);
+  const requesterId = req.user.id;
+  await reviewService.deleteReviewById(reviewId, requesterId);
   res.send(result.success());
 });
 

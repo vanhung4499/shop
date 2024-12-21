@@ -8,7 +8,10 @@ const ProductSchema = mongoose.Schema(
     description: { type: String },
     price: { type: Number, required: true },
     originalPrice: { type: Number },
+    // Stock of the product
     stock: { type: Number, required: true },
+    // Locked stock, when an order is placed, stock is locked until the order is paid
+    lockedStock: { type: Number, default: 0 },
     category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' },
     brand: { type: String },
     images: { type: [String] },

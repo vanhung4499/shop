@@ -1,7 +1,7 @@
 const { Category } = require('../models');
 const AppError = require('../common/errors/app-error');
 const { BizError } = require('../common/errors');
-const ResultCode = require('../common/enums/result-code');
+const ResultCode = require('../common/constants/result-code');
 
 /**
  * Get all categories

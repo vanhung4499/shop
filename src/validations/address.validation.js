@@ -17,6 +17,10 @@ const createAddress = {
   body: addressForm,
 };
 
+const getAddress = {
+  params: addressParam,
+};
+
 const updateAddress = {
   params: addressParam,
   body: addressForm,
@@ -28,6 +32,8 @@ const deleteAddress = {
 
 module.exports = {
   createAddress,
+  getAddress,
   deleteAddress,
   updateAddress,
+  addressForm,
 };

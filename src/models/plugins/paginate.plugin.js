@@ -29,11 +29,11 @@ const paginate = (schema) => {
       });
       sort = sortingCriteria.join(' ');
     } else {
-      sort = 'createdAt';
+      sort = '-createdAt';
     }
 
-    const limit = parseInt(options.limit, 10) > 0 || 10;
-    const page = parseInt(options.page, 10) > 0 || 1;
+    const limit = parseInt(options.limit, 10) || 10;
+    const page = parseInt(options.page, 10) || 1;
     const skip = (page - 1) * limit;
 
     const countPromise = this.countDocuments(filter).exec();

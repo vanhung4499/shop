@@ -8,5 +8,5 @@ module.exports.reviewService = require('./review.service');
 module.exports.cartService = require('./cart.service');
 module.exports.addressService = require('./address.service');
 module.exports.bannerService = require('./banner.service');
-module.exports.paymentService = require('./payment.service');
-module.exports.couponService = require('./coupon.service');
+// module.exports.paymentService = require('./payment.service');
+// module.exports.couponService = require('./coupon.service');

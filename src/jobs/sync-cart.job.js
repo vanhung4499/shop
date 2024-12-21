@@ -35,13 +35,7 @@ const syncCartToMongo = async () => {
 };
 
 // // Schedule to run at 02:00 AM every day
-// cron.schedule('0 2 * * *', async () => {
-//   logger.info('Sync cart job started');
-//   await syncCartToMongo();
-// });
-
-// Schedule to run every 30 seconds
-cron.schedule('*/30 * * * * *', async () => {
+cron.schedule('0 2 * * *', async () => {
   logger.info('Sync cart job started');
   await syncCartToMongo();
 });

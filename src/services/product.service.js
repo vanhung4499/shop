@@ -1,7 +1,8 @@
 const { Product } = require('../models');
 const slugify = require('slugify');
 const { BizError } = require('../common/errors');
-const ResultCode = require('../common/enums/result-code');
+const ResultCode = require('../common/constants/result-code');
+const logger = require('../config/logger');
 
 const getProducts = async (filter, options) => {
   return Product.paginate(filter, options);
@@ -70,6 +71,71 @@ const checkInventory = async (items) => {
   return true;
 };
 
+// Lock stock of products in an order
+const lockStock = async (items) => {
+  for (const item of items) {
+    // Get product
+    const product = await getProductById(item.productId);
+
+    // Check if product has enough available stock
+    const availableStock = product.stock - product.lockedStock;
+    if (availableStock < item.quantity) {
+      return false;
+    }
+
+    // Lock stock
+    product.lockedStock += item.quantity;
+
+    await product.save();
+
+    logger.info(`Locked ${item.quantity} stock of product ${product.id}`);
+  }
+
+  return true;
+};
+
+// Unlock stock of products in an order, when order is cancelled or expired
+const unlockStock = async (items) => {
+  for (const item of items) {
+    // Get product
+    const product = await getProductById(item.productId);
+
+    // Unlock stock
+    product.lockedStock -= item.quantity;
+    await product.save();
+
+    logger.info(`Unlocked ${item.quantity} stock of product ${product.id}`);
+  }
+};
+
+// Deduct stock of products in an order, when order is paid
+const deductStock = async (items) => {
+  for (const item of items) {
+    // Get product
+    const product = await getProductById(item.productId);
+
+    // Deduct stock
+    product.stock -= item.quantity;
+    await product.save();
+
+    logger.info(`Deducted ${item.quantity} stock of product ${product.id}`);
+  }
+};
+
+// refund stock of products in an order, when order is cancelled
+const refundStock = async (items) => {
+  for (const item of items) {
+    // Get product
+    const product = await getProductById(item.productId);
+
+    // Refund stock
+    product.stock += item.quantity;
+    await product.save();
+
+    logger.info(`Refunded ${item.quantity} stock of product ${product.id}`);
+  }
+};
+
 module.exports = {
   getProducts,
   getProductById,
@@ -77,4 +143,8 @@ module.exports = {
   updateProductById,
   deleteProductById,
   checkInventory,
+  lockStock,
+  unlockStock,
+  deductStock,
+  refundStock,
 };

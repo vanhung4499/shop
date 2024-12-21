@@ -18,6 +18,11 @@ router
 
 router
   .route('/:addressId')
+  .get(
+    auth(RoleEnum.CUSTOMER),
+    validate(addressValidation.getAddress),
+    addressController.getAddress,
+  )
   .patch(
     auth(RoleEnum.CUSTOMER),
     validate(addressValidation.updateAddress),

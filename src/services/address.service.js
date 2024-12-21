@@ -1,9 +1,9 @@
 const { Address } = require('../models');
 const { BizError } = require('../common/errors');
-const ResultCode = require('../common/enums/result-code');
+const ResultCode = require('../common/constants/result-code');
 
 const getAddressById = async (addressId) => {
-  const address = await Address.findById(addressId).sort({ createdAt: -1 });
+  const address = await Address.findById(addressId);
 
   if (!address) {
     throw new BizError(ResultCode.ADDRESS_NOT_FOUND);
@@ -13,18 +13,17 @@ const getAddressById = async (addressId) => {
 };
 
 const getAddressesByUser = async (userId) => {
-  const addresses = await Address.find({ userId });
-  return addresses;
+  return Address.find({ userId });
 };
 
 const createAddress = async (addressForm) => {
   return Address.create(addressForm);
 };
 
-const updateAddress = async (addressId, userId, addressForm) => {
+const updateAddress = async (addressId, addressForm) => {
   const address = await getAddressById(addressId);
 
-  if (address.user.toString() !== userId) {
+  if (address.user.toString() !== addressForm.requesterId) {
     throw new BizError(ResultCode.ADDRESS_NOT_BELONG_TO_USER);
   }
 
@@ -32,14 +31,14 @@ const updateAddress = async (addressId, userId, addressForm) => {
   return address.save();
 };
 
-const deleteAddress = async (addressId, userId) => {
+const deleteAddress = async (addressId, requesterId) => {
   const address = await getAddressById(addressId);
 
-  if (address.userId.toString() !== userId) {
+  if (address.userId.toString() !== requesterId) {
     throw new BizError(ResultCode.ADDRESS_NOT_BELONG_TO_USER);
   }
 
-  return address.remove();
+  return address.deleteOne();
 };
 
 module.exports = {
@@ -47,4 +46,5 @@ module.exports = {
   createAddress,
   deleteAddress,
   updateAddress,
+  getAddressById,
 };

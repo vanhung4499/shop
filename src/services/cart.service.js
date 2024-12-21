@@ -1,6 +1,6 @@
 const { Cart, Product } = require('../models');
 const { BizError } = require('../common/errors');
-const ResultCode = require('../common/enums/result-code');
+const ResultCode = require('../common/constants/result-code');
 const RedisKeyConstants = require('../common/constants/redis-key.constant');
 const redisClient = require('../config/redis');
 const { cartConverter } = require('../converters');

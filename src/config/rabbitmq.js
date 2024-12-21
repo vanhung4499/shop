@@ -14,11 +14,18 @@ const rabbitConnect = async () => {
   }
 };
 
-const sendMessage = async (queue, message) => {
+const sendMessage = async (queue, message, ttl = null) => {
   try {
     if (!channel) {
       await rabbitConnect();
     }
+
+    const options = { persist: true };
+
+    if (ttl) {
+      options.expiration = ttl;
+    }
+
     channel.assertQueue(queue, { durable: true });
     logger.info(`Sending message to ${queue}: ${message}`);
   } catch (error) {
@@ -26,4 +33,26 @@ const sendMessage = async (queue, message) => {
   }
 };
 
-module.exports = { rabbitConnect, sendMessage, channel, connection };
+const consumeMessage = async (queue, handler) => {
+  try {
+    if (!channel) {
+      await rabbitConnect();
+    }
+
+    await channel.assertQueue(queue, { durable: true });
+
+    channel.consume(queue, handler, { noAck: true });
+
+    logger.info(`Consuming message from ${queue}`);
+  } catch (error) {
+    logger.error('Error consuming message from RabbitMQ: ' + error);
+  }
+};
+
+module.exports = {
+  rabbitConnect,
+  sendMessage,
+  consumeMessage,
+  channel,
+  connection,
+};

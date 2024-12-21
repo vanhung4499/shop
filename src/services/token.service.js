@@ -1,11 +1,10 @@
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
-const httpStatus = require('http-status');
 const config = require('../config/config');
-const AppError = require('../common/errors/app-error');
 const { User } = require('../models');
-const { loggers } = require('winston');
 const logger = require('../config/logger');
+const { BizError } = require('../common/errors');
+const { ResultCode } = require('../common/constants');
 
 /**
  * Generate token
@@ -33,16 +32,35 @@ const verifyToken = async (token) => {
   try {
     const payload = jwt.verify(token, config.jwt.secret);
 
-    const user = User.findById(payload.sub);
+    const user = await User.findById(payload.sub);
     if (!user) {
-      throw new AppError(httpStatus.UNAUTHORIZED, 'User not found');
+      throw new BizError(ResultCode.USER_NOT_FOUND);
     }
 
     return payload;
   } catch (error) {
     logger.error(error);
-    throw new AppError(httpStatus.UNAUTHORIZED, 'Invalid token');
+    throw new BizError(ResultCode.TOKEN_INVALID);
   }
+};
+
+/**
+ * Generate access token
+ * @param user
+ * @returns {Object}
+ */
+const generateAccessToken = (user) => {
+  const accessTokenExpiresIn = moment().add(
+    config.jwt.accessTokenExpiresIn,
+    'seconds',
+  );
+  const accessToken = generateToken(user.id, accessTokenExpiresIn, user.role);
+  return {
+    access: {
+      token: accessToken,
+      expires: accessTokenExpiresIn.toDate(),
+    },
+  };
 };
 
 /**
@@ -79,4 +97,5 @@ module.exports = {
   generateToken,
   verifyToken,
   generateAuthTokens,
+  generateAccessToken,
 };
