@@ -78,6 +78,13 @@ const ResultCode = Object.freeze({
   PASSWORD_NOT_MATCH: { code: 10900, message: 'Password not match' },
   TOKEN_INVALID: { code: 10901, message: 'Invalid token' },
 
+  // Payment
+  CREATE_ACCOUNT_FAILED: { code: 11000, message: 'Create account failed' },
+  CREATE_TRANSACTION_FAILED: {
+    code: 11001,
+    message: 'Create transaction failed',
+  },
+
   // --- Infrastructure code ---
   DB_ERROR: { code: 30001, message: 'Database error' },
   SERVER_ERROR: { code: 30101, message: 'Server error' },

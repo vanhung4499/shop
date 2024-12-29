@@ -8,6 +8,7 @@ const addressRoute = require('./address.route');
 const reviewRoute = require('./review.route');
 const cartRoute = require('./cart.route');
 const orderRoute = require('./order.route');
+const paymentRoute = require('./payment.route');
 
 const router = express.Router();
 
@@ -32,6 +33,7 @@ router.use('/orders', orderRoute);
 // Coupons
 
 // Payments
+router.use('/payment', paymentRoute);
 
 // Banner
 router.use('/banners', bannerRoute);

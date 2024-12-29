@@ -47,6 +47,9 @@ const UserSchema = mongoose.Schema(
       enum: Object.values(RoleEnum),
       default: RoleEnum.CUSTOMER,
     },
+    accountId: {
+      type: String,
+    },
     phone: { type: String },
     addresses: [
       {

@@ -17,6 +17,8 @@ const envSchema = Joi.object()
     RABBITMQ_URL: Joi.string().required(),
     REDIS_URL: Joi.string().required(),
     ORDER_TIMEOUT: Joi.number().default(900), // 15 minutes
+    SHOP_PAY_SERVICE_URL: Joi.string().required(),
+    SHOP_PAY_API_KEY: Joi.string().required(),
   })
   .unknown();
 
@@ -53,5 +55,9 @@ module.exports = {
   },
   business: {
     orderTimeout: env.ORDER_TIMEOUT,
+  },
+  shopPay: {
+    url: env.SHOP_PAY_SERVICE_URL,
+    apiKey: env.SHOP_PAY_API_KEY,
   },
 };

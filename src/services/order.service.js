@@ -1,15 +1,17 @@
-const { Order, Product } = require('../models');
+const { Order } = require('../models');
 const { BizError } = require('../common/errors');
-const ResultCode = require('../common/constants/result-code');
-const OrderStatusEnum = require('../common/enums/order-status.enum');
-const { productService } = require('./index');
-const { sendMessage, sendDelayedMessage } = require('../config/rabbitmq');
+const { ResultCode } = require('../common/constants');
+const productService = require('./product.service');
+const userService = require('./user.service');
+const { sendDelayedMessage } = require('../config/rabbitmq');
 const {
   RabbitMQConstants,
   OrderCancelReasonConstants,
 } = require('../common/constants');
 const config = require('../config/config');
 const logger = require('../config/logger');
+const paymentService = require('./payment.service');
+const { OrderStatusEnum, PaymentStatusEnum } = require('../common/enums');
 
 // Create a new order, use transaction to ensure data consistency
 const createOrder = async (orderForm) => {
@@ -28,7 +30,11 @@ const createOrder = async (orderForm) => {
     // Save order to database
     const order = await saveOrder(orderForm);
 
-    return order.id;
+    // Commit transaction
+    await session.commitTransaction();
+    await session.endSession();
+
+    return order;
   } catch (error) {
     // Rollback transaction if error occurs
     await session.abortTransaction();
@@ -76,7 +82,7 @@ const payOrder = async (orderId) => {
 
   // TODO: Call the payment gateway api here to process payment
   // For demo purpose, we assume payment is successful
-  const paymentResult = true;
+  const paymentResult = await paymentService.createTransaction(order);
 
   // If payment is successful
   if (paymentResult) {
@@ -85,10 +91,46 @@ const payOrder = async (orderId) => {
     // Deduct stock of products in the order
     await productService.deductStock(order.items);
   } else {
+    // If create payment failed
+
+    // Unlock stock for all products in the order
+    await productService.unlockStock(order.items);
+
+    // Update order status to failed
+    await changeOrderStatus(orderId, OrderStatusEnum.FAILED);
+
+    throw new BizError(ResultCode.ORDER_PAYMENT_FAILED);
+  }
+};
+
+const paymentResult = async (result) => {
+  // Handle payment result from payment service
+  const { transactionId, status, orderId } = result;
+
+  // Update transaction status
+  const order = await getOrderById(orderId);
+
+  // If payment is successful
+  if (status === PaymentStatusEnum.SUCCESS) {
+    // Update order status to paid
+    order.status = OrderStatusEnum.PAID;
+    await order.save();
+
+    // Deduct stock of products in the order
+    await productService.deductStock(order.items);
+  } else {
     // If payment failed
 
     // Unlock stock for all products in the order
     await productService.unlockStock(order.items);
+
+    // Update order status to failed
+    order.status = OrderStatusEnum.FAILED;
+
+    // Update transaction id for tracking
+    order.transactionId = transactionId;
+
+    await order.save();
 
     throw new BizError(ResultCode.ORDER_PAYMENT_FAILED);
   }
@@ -188,4 +230,5 @@ module.exports = {
   closeOrder,
   cancelOrder,
   payOrder,
+  paymentResult,
 };

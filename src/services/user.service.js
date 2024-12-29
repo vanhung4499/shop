@@ -7,6 +7,7 @@ const ResultCode = require('../common/constants/result-code');
 const RedisKeyConstants = require('../common/constants/redis-key.constant');
 const redisClient = require('../config/redis');
 const { userConverter } = require('../converters');
+const paymentService = require('./payment.service');
 
 const getUsers = async (filter, options) => {
   return User.paginate(filter, options);
@@ -35,7 +36,15 @@ const createUser = async (userForm) => {
 
   // Save
   user = await User.create(userForm);
-  return user;
+
+  // Create a shop pay account for payment
+  const accountId = await paymentService.createAccount(user);
+
+  // Update user with account id
+  user.accountId = accountId;
+  await user.save();
+
+  return userConverter.toSimpleUser(user);
 };
 
 const getUserById = async (userId) => {
